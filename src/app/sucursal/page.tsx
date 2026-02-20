@@ -1,49 +1,35 @@
-import { HeroSection } from '@/components/sucursal/HeroSection';
-import { Header } from '@/features/layout/Header';
-import { Footer } from '@/features/layout/Footer';
-import { getMenu } from '@/app/actions/menu';
-import { FeaturedCarousel } from '@/components/sucursal/FeaturedCarousel';
+import Link from 'next/link';
+import Image from 'next/image';
 
-
-
-export default async function FuenteDeSodaPage() {
-  const allProducts = await getMenu();
-
-  const targetIds = [1, 8, 9, 35, 41, 45, 52, 55, 57, 59];
-
-  const featuredProducts = allProducts.filter(p => targetIds.includes(p.id));
-
-  // Sort by the order in targetIds
-  featuredProducts.sort((a, b) => {
-    return targetIds.indexOf(a.id) - targetIds.indexOf(b.id);
-  });
-
+export default function FuenteDeSodaPage() {
   return (
-    <div className="min-h-screen bg-background text-primary">
-      <Header />
-      <main>
-        <HeroSection />
+    <div className="min-h-screen bg-[#1c1c1c] text-white flex flex-col items-center justify-center p-4">
+      <div className="text-center space-y-8">
+        <div className="relative w-48 h-32 mx-auto">
+          <Image
+            src="/logo.webp"
+            alt="Logo Pastelería Hijitos"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+        <h1 className="text-5xl font-bold text-amber-500 font-dancing">
+          Pastelería Hijitos
+        </h1>
+        <p className="text-gray-400 text-xl font-light">
+          Menú para Impresión
+        </p>
 
-        <section id="destacados" className="py-20 bg-background">
-          <div className="container mx-auto px-4 text-center">
-            <h3 className="text-3xl font-light mb-4">Favoritos de la Casa</h3>
-            <p className="text-muted-foreground mb-12">
-              Descubre los platos que nos han hecho famosos en todo el barrio.
-            </p>
-
-            <FeaturedCarousel products={featuredProducts} />
-
-            {featuredProducts.length === 0 && (
-              <div className="bg-muted/30 p-12 rounded-lg border border-dashed border-muted-foreground/20">
-                <p className="text-lg text-muted-foreground italic">
-                  Cargando destacados...
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
-      </main>
-      <Footer />
+        <div className="pt-8">
+          <Link
+            href="/sucursal/cartaclasica"
+            className="inline-block bg-amber-500 text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-amber-400 transition-colors"
+          >
+            Ver Carta Clásica
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
