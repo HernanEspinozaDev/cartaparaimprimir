@@ -1,15 +1,13 @@
 'use server';
-import { getRequestContext } from '@cloudflare/next-on-pages';
 
-
-
+import { getDb } from '@/lib/db';
 
 export interface Product {
     id: number;
     nombre: string;
     descripcion: string | null;
     precio: number;
-    categoria: string; // Kept for compatibility, but populated from joined table
+    categoria: string;
     categoria_id: number;
     imagen_url: string | null;
     disponible: number;
@@ -31,25 +29,11 @@ export async function getMenu(): Promise<Product[]> {
     `;
 
     try {
-        // Use getRequestContext to retrieve the binding
-        const { env } = getRequestContext();
-        const db = env.DB;
-
-        if (!db) {
-            console.error("DB binding not found on getRequestContext().env");
-            return [];
-        }
-
-        const { results } = await db.prepare(query).all<Product>();
+        const db = getDb();
+        const results = db.prepare(query).all() as Product[];
         return results;
     } catch (e) {
         console.error("Error in getMenu:", e);
-        // Fallback for non-edge runtime if accidentally called there?
-        const db = (process.env as any).DB as D1Database;
-        if (db) {
-            const { results } = await db.prepare(query).all<Product>();
-            return results;
-        }
         return [];
     }
 }

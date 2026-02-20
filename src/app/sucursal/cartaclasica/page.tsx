@@ -6,8 +6,6 @@ import "@/styles/menu.css";
 import { Product } from '@/types/menu';
 import { SocialLinks } from '@/components/SocialLinks';
 
-export const runtime = 'edge';
-
 // Helper to group items by category
 const groupItemsByCategory = (items: Product[]) => {
     const groups: Record<string, any[]> = {};

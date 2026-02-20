@@ -4,7 +4,7 @@ import { Footer } from '@/features/layout/Footer';
 import { getMenu } from '@/app/actions/menu';
 import { FeaturedCarousel } from '@/components/sucursal/FeaturedCarousel';
 
-export const runtime = 'edge';
+
 
 export default async function FuenteDeSodaPage() {
   const allProducts = await getMenu();

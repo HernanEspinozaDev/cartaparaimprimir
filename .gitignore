@@ -32,7 +32,7 @@ yarn-error.log*
 
 .vercel
 
-# Cloudflare / Workers
+# Cloudflare / Workers (legacy)
 .wrangler
 .dev.vars
 worker-configuration.d.ts
@@ -44,6 +44,5 @@ Thumbs.db
 *.swp
 *.swo
 
-# Database
-*.sql
-migrations/
+# Misc
+npm_install.log
