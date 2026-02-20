@@ -1,0 +1,12 @@
+name = "pasteleria-hijitos"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pasteleria-db"
+database_id = "f7985336-a478-4502-84a5-8b40835559dc"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "pasteleria-assets"
+
+
