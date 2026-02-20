@@ -1,78 +1,139 @@
-
-import Image from 'next/image';
 import { getMenu } from '@/app/actions/menu';
 import MenuSection from "@/components/cartaclasica/MenuSection";
 import "@/styles/menu.css";
 import { Product } from '@/types/menu';
-import { SocialLinks } from '@/components/SocialLinks';
+import Image from 'next/image';
+
+// Categorías definidas para cada página
+const PAGE1_CATEGORIES = [
+    'Combos', 'Pizzas', 'Empanadas', 'Hamburguesas',
+    'Sandwich', 'Completos', 'Papas', 'Desayuno'
+];
+
+const PAGE2_CATEGORIES = [
+    'Postres', 'Helados', 'Bebidas', 'Pastelería'
+];
 
 // Helper to group items by category
-const groupItemsByCategory = (items: Product[]) => {
+const groupItemsByCategory = (items: Product[], allowedCategories: string[]) => {
     const groups: Record<string, any[]> = {};
 
     items.forEach(item => {
-        // Filter out items with stock management enabled and 0 stock
-        if (item.gestionar_stock === 1 && item.stock <= 0) {
-            return;
-        }
-
+        if (item.gestionar_stock === 1 && item.stock <= 0) return;
         const category = item.categoria || 'Otros';
-        if (!groups[category]) {
-            groups[category] = [];
-        }
+
+        // Solo incluir si está en las categorías permitidas
+        if (!allowedCategories.includes(category)) return;
+
+        if (!groups[category]) groups[category] = [];
+
         groups[category].push({
             name: item.nombre,
             price: item.precio,
             ingredients: item.ingredientes,
-            imageUrl: item.imagen_url,
             stock: item.stock,
             gestionar_stock: item.gestionar_stock
         });
     });
 
-    return Object.entries(groups).map(([name, items]) => ({
-        name,
-        items
-    }));
+    // Mantener el orden de las categorías según la lista permitida
+    return allowedCategories
+        .filter(cat => groups[cat]) // Solo incluir si tiene elementos
+        .map(name => ({
+            name,
+            items: groups[name]
+        }));
 };
+
+// Componente para las ilustraciones line art (Imágenes generadas de alta calidad)
+const LineArt = () => {
+    return (
+        <Image
+            src="/menu_art_pizza_wheat_1771626976622.png"
+            alt="Fondo decorativo"
+            fill
+            className="line-art"
+            style={{ objectFit: 'cover', opacity: 0.08 }}
+        />
+    );
+};
+
+const LineArtPage2 = () => {
+    return (
+        <Image
+            src="/menu_art_coffee_dessert_1771626990153.png"
+            alt="Fondo decorativo"
+            fill
+            className="line-art"
+            style={{ objectFit: 'cover', opacity: 0.08 }}
+        />
+    );
+}
 
 export default async function CartaClasicaPage() {
     const menuItems = await getMenu();
-    const sections = groupItemsByCategory(menuItems);
+
+    const page1Sections = groupItemsByCategory(menuItems, PAGE1_CATEGORIES);
+    const page2Sections = groupItemsByCategory(menuItems, PAGE2_CATEGORIES);
 
     return (
-        <div className="min-h-screen bg-[#1c1c1c] text-white">
-            <div className="menu-container">
-                <header className="menu-header">
-                    <div className="relative w-40 h-24 mx-auto mb-4">
+        <div className="min-h-screen bg-neutral-100 text-black flex flex-col items-center">
+
+            {/* PAGINA 1 */}
+            <div className="print-page">
+                <LineArt />
+
+                <header className="menu-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ position: 'relative', width: '220px', height: '120px', marginBottom: '5px' }}>
                         <Image
                             src="/logo.webp"
-                            alt="Logo"
+                            alt="Logo Pastelería Hijitos"
                             fill
                             className="object-contain"
                         />
                     </div>
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold text-amber-500 mb-2 font-dancing">Pastelería Hijitos</h1>
-                        <div className="text-xl text-gray-400 font-light tracking-wide uppercase">Menú</div>
-                        <div className="mt-4">
-                            <SocialLinks className="text-gray-400" tikTokClassName="text-white" />
-                        </div>
-                    </div>
                 </header>
 
-                <main className="space-y-12 py-8">
-                    {sections.length > 0 ? (
-                        sections.map((section, index) => (
+                <div className="page-content cols-4">
+                    {page1Sections.length > 0 ? (
+                        page1Sections.map((section, index) => (
                             <MenuSection key={index} name={section.name} items={section.items} />
                         ))
                     ) : (
-                        <div className="text-center text-gray-500 py-10">
-                            <p>Cargando menú...</p>
-                        </div>
+                        <p className="text-center">Cargando menú...</p>
                     )}
-                </main>
+                </div>
             </div>
+
+            {/* PAGINA 2 */}
+            <div className="print-page">
+                <LineArtPage2 />
+
+                <header className="menu-header">
+                </header>
+
+                <div className="page-content cols-3">
+                    {page2Sections.length > 0 ? (
+                        page2Sections.map((section, index) => (
+                            <MenuSection key={index} name={section.name} items={section.items} />
+                        ))
+                    ) : (
+                        <p className="text-center">Cargando menú...</p>
+                    )}
+                </div>
+
+                {/* Espacio para el Código QR posicionado abajo a la izquierda, alienado al margen real */}
+                <div className="qr-section" style={{ position: 'absolute', bottom: '15mm', left: '15mm', padding: '0', background: 'transparent', borderRadius: '8px', zIndex: 20 }}>
+                    <img
+                        src="https://imagenes.pasteleriahijitos.cl/qr-sucursal-logo.webp"
+                        alt="Código QR Pastelería Hijitos"
+                        width="180"
+                        height="180"
+                        style={{ objectFit: 'cover' }}
+                    />
+                </div>
+            </div>
+
         </div>
     );
 }

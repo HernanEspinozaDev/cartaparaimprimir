@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#1c1c1c] text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center p-4">
       <div className="text-center space-y-8">
         <div className="relative w-48 h-32 mx-auto">
           <Image
@@ -20,9 +20,9 @@ export default function Home() {
         <p className="text-gray-400 text-xl font-light">
           Menú para Impresión
         </p>
-        
+
         <div className="pt-8">
-          <Link 
+          <Link
             href="/sucursal/cartaclasica"
             className="inline-block bg-amber-500 text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-amber-400 transition-colors"
           >

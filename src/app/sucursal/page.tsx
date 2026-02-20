@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function FuenteDeSodaPage() {
   return (
-    <div className="min-h-screen bg-[#1c1c1c] text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white text-black flex flex-col items-center justify-center p-4">
       <div className="text-center space-y-8">
         <div className="relative w-48 h-32 mx-auto">
           <Image
